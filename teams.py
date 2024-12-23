@@ -1,40 +1,63 @@
-import requests
-import json
+import os
 
-# Replace this with your Incoming Webhook URL
-webhook_url = "YOUR_WEBHOOK_URL_HERE"
+import subprocess
 
-# Define the message payload
-message_payload = {
-    "text": "Hello, this is a test message from Python with improved error handling!"
-}
+def create_executable(script_path, output_dir, additional_folders-None):
+
+if not os.path.isfile(script_path):
+
+print(f"Script not found: {script_path}")
+
+return
+
+# Base PyInstaller command
+
+command - [
+
+"pyinstaller",
+
+"--onefile", # Single executable
+
+"--noconsole", # No console window (for GUI apps, optional)
+
+f"--distpath=(output_dir}", # Specify output directory
+
+script_path, #Path to the main script
+
+#Add additional folders as data
+]
+if additional_folders:
+
+for folder in additional_folders:
+
+if os.path.isdir(folder):
+
+command.append(f"--add-data-{folder}{os.pathsep}{folder}")
+
+else:
+
+print(f"Folder not found: (folder)")
+
+#Run the PyInstaller command
 
 try:
-    # Attempt to send the message
-    response = requests.post(
-        url=webhook_url,
-        headers={"Content-Type": "application/json"},
-        data=json.dumps(message_payload),
-        timeout=10  # Adding a timeout to avoid hanging
-    )
-    
-    # Check the response status code
-    response.raise_for_status()  # This will raise an HTTPError for bad responses (4xx or 5xx)
 
-    print("Message sent successfully!")
+subprocess.run(command, check-True)
 
-except requests.exceptions.HTTPError as http_err:
-    print(f"HTTP error occurred: {http_err}")
-    print(f"Response content: {response.text}")
+print(f"Executable created successfully in (output_dir}")
 
-except requests.exceptions.ConnectionError as conn_err:
-    print(f"Connection error occurred: {conn_err}")
+except subprocess.CalledProcessError as e:
 
-except requests.exceptions.Timeout as timeout_err:
-    print(f"Timeout error occurred: {timeout_err}")
+print(f"Error occurred: {e}")
 
-except requests.exceptions.RequestException as req_err:
-    print(f"An error occurred: {req_err}")
+# Usage
 
-except Exception as e:
-    print(f"An unexpected error occurred: {e}")
+script path = "invoice_automation.py" # Path to your main Python script
+
+output_dir = "output" # Directory for the executable
+
+additional_folders = ["Invoice_Automation"]
+
+# Folders to include
+
+create_executable(script_path, output_dir, additional_folders
